@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.demochat.Adapter.MessageAdapter;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,15 +56,13 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         try {
-            client_socket = IO.socket("http://192.168.4.177:3000");
+            client_socket = IO.socket("http://192.168.1.104:3000");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
         client_socket.connect();
-
 
         client_socket.on("SERVER_GUI_TIN_NHAN", NhanTinNhanServer);
         client_socket.emit("DANG_KY_PHONG", object);
@@ -76,10 +72,19 @@ public class MainActivity extends AppCompatActivity {
         btnGui.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TinNhans.add(new Message(etTinNhan.getText().toString().trim(), ""));
-                client_socket.emit("CLIENT_GUI_TIN_NHAN", etTinNhan.getText().toString().trim());
+                TinNhans.add(new Message(NickName, etTinNhan.getText().toString().trim(), ""));
+                JSONObject object = new JSONObject();
+                try {
+                    object.put("NickName", NickName);
+                    object.put("NoiDung", etTinNhan.getText().toString().trim());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                client_socket.emit("CLIENT_GUI_TIN_NHAN", object);
                 messageAdapter.notifyDataSetChanged();
                 rvTinNhan.scrollToPosition(TinNhans.size() - 1);
+
+                etTinNhan.setText("");
             }
         });
     }
@@ -92,14 +97,16 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     JSONObject object = (JSONObject) args[0];
                     String TinNhan_Server = "";
+                    String NickName_Sender = "";
 
                     try {
-                        TinNhan_Server = object.getString("TinNhan");
+                        TinNhan_Server = object.getString("NoiDung");
+                        NickName_Sender = object.getString("NickName");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    TinNhans.add(new Message("", TinNhan_Server));
+                    TinNhans.add(new Message(NickName_Sender, "", TinNhan_Server));
                     messageAdapter.notifyDataSetChanged();
                     rvTinNhan.scrollToPosition(TinNhans.size() - 1);
                 }

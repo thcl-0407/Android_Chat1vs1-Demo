@@ -43,6 +43,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             holder.tvNhan.setText(TinNhans.get(position).getTinNhan());
             holder.tvGui.setVisibility(View.GONE);
             holder.container_nguoi_nhan.setVisibility(View.VISIBLE);
+
+            holder.tvTenNhan.setText(TinNhans.get(position).getNickName());
         }
     }
 
@@ -55,12 +57,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         LinearLayout container_nguoi_nhan;
         TextView tvNhan;
         TextView tvGui;
+        TextView tvTenNhan;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvNhan = (TextView) itemView.findViewById(R.id.tvNhan);
             tvGui = (TextView) itemView.findViewById(R.id.tvGui);
+            tvTenNhan = (TextView) itemView.findViewById(R.id.tvTenNhan);
             container_nguoi_nhan = (LinearLayout) itemView.findViewById(R.id.container_nguoi_nhan);
         }
     }
