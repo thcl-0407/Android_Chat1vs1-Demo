@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            client_socket = IO.socket("http://192.168.1.104:3000");
+            client_socket = IO.socket("http://54.179.131.22:3002");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
